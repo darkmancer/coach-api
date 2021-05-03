@@ -4,7 +4,14 @@ exports.getAllReviews = async (req, res, next) => {
   try {
     const id = req.params.id; //coach id
     const reviews = await Review.findAll({ where: { coachId: id } });
-    res.status(200).json({ message: "get reviews", reviews });
+    const scoreArr = reviews.map((review) => {
+      return Number(review.reviewScore);
+    });
+    let averageScore = Math.ceil(
+      scoreArr?.reduce((a, b) => a + b) / scoreArr?.length
+    );
+
+    res.status(200).json({ message: "get reviews", reviews, averageScore });
   } catch (er) {
     next(err);
   }
@@ -57,7 +64,7 @@ exports.editReview = async (req, res, next) => {
         .status(401)
         .json({ message: "can only update your own review" }); //check if that user owns the review
     await Review.update({ review, reviewScore }, { where: { id } });
-    res.status(200).json({message: 'Review Edited'})
+    res.status(200).json({ message: "Review Edited" });
   } catch (err) {
     next(err);
   }

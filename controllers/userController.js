@@ -1,8 +1,12 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
+const client = new OAuth2Client(
+  "168415094646-6d28j5ip6oojlqv418d7n061r2ipbfuj.apps.googleusercontent.com"
+);
 cloudinary.config({
   cloud_name: "darkmancer",
   api_key: "111775957868488",
@@ -174,6 +178,21 @@ exports.getAllUsers = async (req, res, next) => {
       return { username: user.username, userId: user.id };
     });
     res.status(200).json({ mappedUsers });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.googlelogin = async (req, res, next) => {
+  try {
+    console.log("this called");
+    const { tokenId } = req.body;
+    const response = await client.verifyIdToken({
+      idToken: tokenId,
+      audience:
+        "168415094646-6d28j5ip6oojlqv418d7n061r2ipbfuj.apps.googleusercontent.com",
+    });
+    return res.status(200).json({ response });
   } catch (err) {
     next(err);
   }

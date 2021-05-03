@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      avatar:DataTypes.STRING
+      avatar:DataTypes.STRING,
+      price: DataTypes.STRING
     },
     { underscored: true }
   );

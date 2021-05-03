@@ -1,5 +1,10 @@
 require("dotenv").config();
+require('./middlewares/passport');
 const { Booking, sequelize } = require("./models");
+const bodyParser = require('body-parser')
+const passport = require('passport');
+const cookieSession = require('cookie-session')
+require('./passport-setup');
 const express = require("express");
 const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
@@ -17,6 +22,7 @@ const userRoute = require("./routes/userRoute");
 const coachRoute = require("./routes/coachRoute");
 const bookingRoute = require("./routes/bookingRoute");
 const reviewRoute = require("./routes/reviewRoute");
+
 const app = express();
 const errorMiddleware = require("./middlewares/error.js");
 const userController = require("./controllers/userController");
@@ -54,6 +60,7 @@ app.post("/login", userController.login);
 app.use("/booking", bookingRoute);
 app.use("/review", reviewRoute);
 
+
 app.put("/upload-slip", upload.single("image"), async (req, res, next) => {
   try {
     const { bookingId } = req.body;
@@ -84,7 +91,9 @@ app.use((req, res) => {
     .json({ message: "path not found on this server #personal-project" });
 });
 app.use(errorMiddleware);
-// sequelize.sync({ force: true });
+// sequelize.sync({ force: false });
+
+
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`server running on port ${port}`));
