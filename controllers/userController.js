@@ -72,7 +72,7 @@ exports.register = async (req, res, next) => {
       discord,
       role: "USER",
     });
-    res.status(201).json({ message: "register successfully" });
+    res.status(201).json({message: "register successfully" });
   } catch (err) {
     next(err);
   }
